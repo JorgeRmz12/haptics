@@ -1,11 +1,99 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 
-export default function App() {
+import * as Haptics from 'expo-haptics';
+
+export default function Haptico() {
+  const [mensaje, setMensaje] = useState(
+    'Presiona un botón para probar'
+  );
+
+  const confirmar = async () => {
+    await Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Success
+    );
+    setMensaje('¡Acción completada correctamente!');
+  };
+
+  const mostrarError = async () => {
+    await Haptics.notificationAsync(
+      Haptics.NotificationFeedbackType.Error
+    );
+    setMensaje('Ocurrió un error. Intenta de nuevo.');
+  };
+
+  const seleccionar = async () => {
+    await Haptics.selectionAsync();
+    setMensaje('Has seleccionado una opción');
+  };
+
+  const hacerImpacto = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setMensaje('¡Impacto táctil ejecutado!');
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text style={styles.emoji}>📱</Text>
+
+      <Text style={styles.title}>
+        Laboratorio háptico
+      </Text>
+
+      <Text style={styles.description}>
+        Toca los botones y siente la respuesta
+        de tu dispositivo.
+      </Text>
+
+      <Pressable
+        style={[styles.button, styles.success]}
+        onPress={confirmar}
+      >
+        <Text style={styles.buttonText}>
+          ✅ Confirmar
+        </Text>
+      </Pressable>
+
+      <Pressable
+        style={[styles.button, styles.error]}
+        onPress={mostrarError}
+      >
+        <Text style={styles.buttonText}>
+          ❌ Simular error
+        </Text>
+      </Pressable>
+
+      <Pressable
+        style={[styles.button, styles.selection]}
+        onPress={seleccionar}
+      >
+        <Text style={styles.buttonText}>
+          Seleccionar opción 👀
+        </Text>
+      </Pressable>
+
+      <Pressable
+        style={[styles.button, styles.impact]}
+        onPress={hacerImpacto}
+      >
+        <Text style={styles.buttonText}>
+          ⚡ Simular impacto
+        </Text>
+      </Pressable>
+
+      <View style={styles.messageBox}>
+        <Text style={styles.messageTitle}>
+          Resultado
+        </Text>
+        <Text style={styles.message}>
+          {mensaje}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -13,8 +101,67 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F7FB',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 24,
+    gap: 12,
+  },
+  emoji: {
+    fontSize: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#172554',
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#64748B',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  button: {
+    width: '100%',
+    paddingVertical: 15,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  success: {
+    backgroundColor: '#15803D',
+  },
+  error: {
+    backgroundColor: '#DC2626',
+  },
+  selection: {
+    backgroundColor: '#2563EB',
+  },
+  impact: {
+    backgroundColor: '#D97706',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  messageBox: {
+    width: '100%',
+    padding: 16,
+    marginTop: 4,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  messageTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#64748B',
+    marginBottom: 6,
+  },
+  message: {
+    fontSize: 15,
+    color: '#172554',
+    textAlign: 'center',
   },
 });
